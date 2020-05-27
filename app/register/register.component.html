@@ -1,0 +1,21 @@
+<ActionBar title="Sektion auswählen">
+    <ActionItem>
+	<Label text="&#xf0c9;" class="fas" style="font-size:18pt" (tap)="toggleSideDrawer()"></Label>
+    </ActionItem>
+</ActionBar>
+
+<ScrollView>
+    <DockLayout stretchLastChild="true">
+	<GridLayout dock="bottom" columns="*,*,*" rows="*" height="10%">
+	    <Button row="0" col="1" text="&#xf101;" class="fas icon" [isEnabled]="canRegister()" (tap)="register()"></Button>
+	</GridLayout>
+	<StackLayout dock="top">
+	    <StackLayout *ngFor="let zone of zones">
+		<DockLayout stretchLastChild="false">
+		    <Label [text]="'Sektion ' + zone.number" dock="left" class="m-y-auto"></Label>
+		    <Switch [(ngModel)]="zone.selected" [isEnabled]="switchIsEnabled(zone)" dock="right"></Switch>
+		</DockLayout>
+	    </StackLayout>
+	</StackLayout>
+    </DockLayout>
+</ScrollView>

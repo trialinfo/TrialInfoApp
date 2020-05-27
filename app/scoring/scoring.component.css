@@ -1,0 +1,21 @@
+.keypad-title {
+  font-weight: bold;
+  text-align: center;
+}
+.timer {
+  font-size: 96pt;
+}
+.rider-name {
+  font-size: 20pt;
+}
+.rider-number,.rider-round {
+  font-size: 48pt;
+}
+.rider-previous-marks {
+  font-size: 28pt;
+  font-weight: bold;
+}
+.rider-marks {
+  font-size: 180pt;
+  font-weight: bold;
+}

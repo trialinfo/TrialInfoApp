@@ -1,0 +1,82 @@
+<!-- <ActionBar [title]="'Sektion ' + zone"> -->
+<ActionBar title="Punktevergabe">
+    <ActionItem>
+	<Label text="&#xf0c9;" class="fas" style="font-size:18pt" (tap)="toggleSideDrawer()"></Label>
+    </ActionItem>
+</ActionBar>
+
+<DockLayout stretchLastChild="true">
+    <StackLayout dock="bottom">
+	<GridLayout columns="*,*,*" rows="auto,*,*,*,*,*" height="50%" [visibility]="keypad == 'number' ? 'visible' : 'collapsed'">
+	    <Label row="0" col="0" colspan="3" [text]="enterNextNumber ? 'Nächste Startnummer' : 'Startnummer'" class="keypad-title"></Label>
+	    <Button row="1" col="0" text="1" class="text" (tap)="enterDigit(1)" [isEnabled]="!!nextNumberDigits[1]"></Button>
+	    <Button row="1" col="1" text="2" class="text" (tap)="enterDigit(2)" [isEnabled]="!!nextNumberDigits[2]"></Button>
+	    <Button row="1" col="2" text="3" class="text" (tap)="enterDigit(3)" [isEnabled]="!!nextNumberDigits[3]"></Button>
+	    <Button row="2" col="0" text="4" class="text" (tap)="enterDigit(4)" [isEnabled]="!!nextNumberDigits[4]"></Button>
+	    <Button row="2" col="1" text="5" class="text" (tap)="enterDigit(5)" [isEnabled]="!!nextNumberDigits[5]"></Button>
+	    <Button row="2" col="2" text="6" class="text" (tap)="enterDigit(6)" [isEnabled]="!!nextNumberDigits[6]"></Button>
+	    <Button row="3" col="0" text="7" class="text" (tap)="enterDigit(7)" [isEnabled]="!!nextNumberDigits[7]"></Button>
+	    <Button row="3" col="1" text="8" class="text" (tap)="enterDigit(8)" [isEnabled]="!!nextNumberDigits[8]"></Button>
+	    <Button row="3" col="2" text="9" class="text" (tap)="enterDigit(9)" [isEnabled]="!!nextNumberDigits[9]"></Button>
+	    <Button row="4" col="1" text="0" class="text" (tap)="enterDigit(0)" [isEnabled]="!!nextNumberDigits[0]"></Button>
+	    <Button row="5" col="1" text="&#xf101;" class="fas icon" (tap)="confirmNumber()" [isEnabled]="rider != null && !enterNextNumber"></Button>
+	    <Button row="5" col="2" text="&#x232b;" class="icon" (tap)="numberBack()" [visibility]="(number == null || enterNextNumber) ? 'hidden' : 'visible'"></Button>
+	</GridLayout>
+	<GridLayout columns="*,*,*" rows="auto,*,*" height="20%" [visibility]="keypad == 'timer' ? 'visible' : 'collapsed'">
+	    <Label row="0" col="0" colspan="3" text="Stoppuhr" class="keypad-title"></Label>
+	    <Button row="1" col="0" text="&#xf04a;" class="fas icon" (tap)="timerReset()" [isEnabled]="timer == 'running' || timer == 'paused'"></Button>
+	    <Button row="1" col="1" text="&#xf04b;" class="fas icon" (tap)="timerStart()" *ngIf="timer == 'stopped' || timer == 'paused'"></Button>
+	    <Button row="1" col="1" text="&#xf04c;" class="fas icon" (tap)="timerPause()" *ngIf="timer == 'running'"></Button>
+	    <Button row="2" col="1" text="&#xf101;" class="fas icon" (tap)="timerNext()"></Button>
+	    <Button row="2" col="2" text="&#x232b;" class="icon" (tap)="timerBack()"></Button>
+	</GridLayout>
+	<GridLayout columns="*,*,*" rows="auto,*,*,*,*,*" height="50%" [visibility]="keypad == 'marks' && !event.uci_x10 ? 'visible' : 'collapsed'">
+	    <Label row="0" col="0" colspan="3" text="Punkte" class="keypad-title"></Label>
+	    <Button row="1" col="0" text="1" class="text" (tap)="enterMarks(1)"></Button>
+	    <Button row="1" col="1" text="2" class="text" (tap)="enterMarks(2)"></Button>
+	    <Button row="1" col="2" text="3" class="text" (tap)="enterMarks(3)"></Button>
+	    <Button row="2" col="0" text="4" class="text" (tap)="enterMarks(4)" [visibility]="event.four_marks ? 'visible' : 'hidden'"></Button>
+	    <Button row="2" col="1" text="5" class="text" (tap)="enterMarks(5)"></Button>
+	    <Button row="4" col="1" text="0" class="text" (tap)="enterMarks(0)"></Button>
+	    <Button row="5" col="2" text="&#x232b;" class="icon" (tap)="marksBack()"></Button>
+	</GridLayout>
+	<GridLayout columns="*,*,*" rows="auto,*,*,*,*,*" height="50%" [visibility]="keypad == 'marks' && event.uci_x10 ? 'visible' : 'collapsed'">
+	    <Label row="0" col="0" colspan="3" text="Punkte" class="keypad-title"></Label>
+	    <Button row="1" col="0" text="10" class="text" (tap)="enterMarks(10)"></Button>
+	    <Button row="1" col="1" text="20" class="text" (tap)="enterMarks(20)"></Button>
+	    <Button row="1" col="2" text="30" class="text" (tap)="enterMarks(30)"></Button>
+	    <Button row="2" col="0" text="40" class="text" (tap)="enterMarks(40)"></Button>
+	    <Button row="2" col="1" text="50" class="text" (tap)="enterMarks(50)"></Button>
+	    <Button row="2" col="2" text="60" class="text" (tap)="enterMarks(60)"></Button>
+	    <Button row="4" col="1" text="0" class="text" (tap)="enterMarks(0)"></Button>
+	    <Button row="5" col="2" text="&#x232b;" class="icon" (tap)="marksBack()"></Button>
+	</GridLayout>
+	<GridLayout columns="*,*,*" rows="auto,*" height="10%" [visibility]="keypad == 'confirm' && !event.uci_x10 ? 'visible' : 'collapsed'">
+	    <Label row="0" col="0" colspan="3" text="Bestätigen" class="keypad-title" (tap)="confirmMarks()"></Label>
+	    <Button row="1" col="0" text="+5" class="text" (tap)="enterPenaltyMarks(5)" [isEnabled]="penalty_marks == null"></Button>
+	    <Button row="1" col="1" text="&#xf058;" class="fas icon" (tap)="confirmMarks()"></Button>
+	    <Button row="1" col="2" text="&#x232b;" class="icon" (tap)="confirmBack()"></Button>
+	</GridLayout>
+	<GridLayout columns="*,*,*" rows="auto,*" height="10%" [visibility]="keypad == 'confirm' && event.uci_x10 ? 'visible' : 'collapsed'">
+	    <Label row="0" col="0" colspan="3" text="Bestätigen" class="keypad-title" (tap)="confirmMarks()"></Label>
+	    <Button row="1" col="0" text="−100" class="text" (tap)="enterPenaltyMarks(-100)" [isEnabled]="penalty_marks == null"></Button>
+	    <Button row="1" col="1" text="&#xf058;" class="fas icon" (tap)="confirmMarks()"></Button>
+	    <Button row="1" col="2" text="&#x232b;" class="icon" (tap)="confirmBack()"></Button>
+	</GridLayout>
+    </StackLayout>
+    <ScrollView dock="top">
+	<DockLayout stretchLastChild="true">
+	    <DockLayout dock="top" [color]="riderColor() || ''" [backgroundColor]="riderBackgroundColor() || ''">
+		<Label dock="right" [text]="previousMarksText()" class="rider-previous-marks text-right m-l-5 m-r-5 m-y-auto"></Label>
+		<FlexboxLayout dock="left" flexDirection="row">
+		    <Label [text]="number" alignSelf="center" class="rider-number m-l-5 m-r-5"></Label>
+		    <Label [text]="rider_name(rider)" alignSelf="center" class="rider-name m-l-5 m-r-5"></Label>
+		</FlexboxLayout>
+	    </DockLayout>
+	    <DockLayout dock="bottom" stretchLastChild="true">
+		<Label [text]="showTimeout()" class="timer text-center m-y-auto" *ngIf="keypad == 'timer'"></Label>
+		<Label [text]="marksText()" class="rider-marks text-center m-y-auto" *ngIf="keypad == 'confirm'"></Label>
+	    </DockLayout>
+	</DockLayout>
+    </ScrollView>
+</DockLayout>

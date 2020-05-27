@@ -1,0 +1,15 @@
+.sideStackLayout {
+}
+
+.sideTitleStackLayout {
+    text-align: center;
+    vertical-align: center;
+}
+
+.sideLabel {
+    padding: 10;
+}
+
+.sideLabel:disabled {
+    color: gray;
+}

@@ -16,6 +16,10 @@ The imported CSS rules must precede all other types of rules.
 /* Place any CSS rules you want to apply on both iOS and Android here.
 This is where the vast majority of your CSS code goes. */
 
+Label, TextField {
+  font-size: 15;
+}
+
 .far {
   font-family: 'Font Awesome 5 Free', 'fa-regular-400';
   font-weight: 400;
@@ -25,10 +29,29 @@ This is where the vast majority of your CSS code goes. */
   font-weight: 900;
 }
 
+.highlighted {
+  color: #ffffff;
+  background-color: #e00000;
+}
+
+Button.text {
+  font-size: 26pt;
+  border-width: 0;
+  border-color: transparent;
+  z-index: 0;
+}
+
+Button.icon {
+  font-size: 21pt;
+  border-width: 0;
+  border-color: transparent;
+  z-index: 0;
+}
+
 /*
 The following CSS rule changes the font size of all Buttons that have the
 "-primary" class modifier.
 */
 Button.-primary {
-    font-size: 18;
+  font-size: 18;
 }

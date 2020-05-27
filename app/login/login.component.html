@@ -1,0 +1,18 @@
+<ActionBar title="Registrieren">
+    <ActionItem>
+	<Label text="&#xf0c9;" class="fas" style="font-size:18pt" (tap)="toggleSideDrawer()"></Label>
+    </ActionItem>
+</ActionBar>
+
+<FlexboxLayout width="auto">
+    <DockLayout stretchLastChild="true">
+	<GridLayout dock="bottom" columns="*,*,*" rows="*" height="10%">
+	    <Button row="0" col="1" text="&#xf101;" class="fas icon" (tap)="connect()"></Button>
+	</GridLayout>
+	<StackLayout dock="top">
+	    <TextField hint="Server-URL" keyboardType="url" autocorrect="false" autocapitalizationType="none" [(ngModel)]="serverUrl"></TextField>
+	    <!-- <TextField hint="Sync-Server-URL" keyboardType="url" autocorrect="false" autocapitalizationType="none" [(ngModel)]="syncServerUrl"></TextField> -->
+	    <TextField hint="Zugriffs-Token" autocorrect="false" autocapitalizationType="none" [(ngModel)]="accessToken"></TextField>
+	</StackLayout>
+    </DockLayout>
+</FlexboxLayout>

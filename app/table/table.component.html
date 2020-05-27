@@ -1,0 +1,45 @@
+<ActionBar title="Punktetabelle">
+    <ActionItem>
+	<Label text="&#xf0c9;" class="fas" style="font-size:18pt" (tap)="toggleSideDrawer()"></Label>
+    </ActionItem>
+</ActionBar>
+
+<DockLayout stretchLastChild="true">
+    <StackLayout dock="bottom">
+	<GridLayout columns="*,*,*" rows="*" height="10%" [visibility]="true ? 'visible' : 'collapsed'">
+	    <Button row="0" col="1" text="&#xf2ed;" class="far icon" (tap)="cancelMarks()" [isEnabled]="selected != null"></Button>
+	</GridLayout>
+    </StackLayout>
+    <ScrollView orientation="horizontal">
+	<ScrollView orientation="vertical">
+	    <StackLayout *ngFor="let zone of registeredZones">
+		<Label [text]="'Sektion ' + zone" class="h2" *ngIf="registeredZones.length > 1"></Label>
+		<GridLayout
+		 [columns]="'auto,auto' + ',auto'.repeat(rounds(zones[zone]))"
+		 [rows]="'auto' + ',auto'.repeat(zones[zone].riders.length)">
+		    <Label col="0" row="0" text="Nr." class="text-center p-2"></Label>
+		    <Label col="1" row="0" text="Name" class="p-2"></Label>
+		    <Label [col]="1 + round" row="0" [text]="'R' + round"
+		    class="text-center p-y-2 p-x-8"
+		     *ngFor="let round of range(1, zones[zone].rounds)"></Label>
+		    <Label col="0" [row]="i + 1" [text]="rider_number(rider)"
+		     (tap)="tapRider(rider)"
+		     class="text-center p-2"
+		     *ngFor="let rider of zones[zone].riders; index as i"></Label>
+		    <Label col="1" [row]="i + 1" [text]="rider_name(rider)"
+		     (tap)="tapRider(rider)"
+		     class="p-2"
+		     *ngFor="let rider of zones[zone].riders; index as i"></Label>
+		    <ng-template ngFor let-rider [ngForOf]="zones[zone].riders" let-i="index">
+			<Label [col]="1 + round" [row]="i + 1"
+			 [text]="rider_marks(rider, round, zones[zone])"
+			 (tap)="tapMarks(rider, round)"
+			 class="text-center p-y-2 p-x-8"
+			 [ngClass]="{'highlighted': marksHighlighted(rider, round)}"
+			 *ngFor="let round of range(1, rounds(zones[zone]))"></Label>
+		    </ng-template>
+		</GridLayout>
+	    </StackLayout>
+	</ScrollView>
+    </ScrollView>
+</DockLayout>
