@@ -15,13 +15,18 @@
         "baseUrl": ".",
         "paths": {
             "~/*": [
-                "src/*"
-            ],
-            "*": [
-                "./node_modules/*"
+                "app/*"
             ]
         }
     },
+    "include": [
+      "app/tests/**/*.ts",
+      "app/**/*.ios.ts",
+      "app/**/*.android.ts"
+    ],
+    "files": [
+      "./app/main.ts"
+    ],
     "exclude": [
         "node_modules",
         "platforms"
