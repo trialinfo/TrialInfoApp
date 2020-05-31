@@ -1,0 +1,41 @@
+Install NativeScript into $HOME with:
+
+$ mkdir ~/nativescript
+$ cd ~/nativescript
+$ npm install nativescript
+
+Then, change here and start this app in preview mode with the tns utility you
+have installed into $HOME/nativescript/node_modules/.bin/ above:
+
+$ ns run android --emulator
+$ ns run android
+$ ns build android
+
+The above will automatically install all npm modules required by this app, but
+you can also do that manually with:
+
+$ npm install
+
+
+The app contains a sqlite database.  The contents of the database can be dumped with:
+
+$ sqlite3 app/scoring.sqlite ".schema" > scoring.sql
+
+The database structure can be recreated from the dump as follows:
+
+$ rm -f app/scoring.sqlite
+$ sqlite3 app/scoring.sqlite -init scoring.sql
+
+
+For testing on Android devices, Developer Options and USB Debugging needs to be
+enabled:
+
+* Go to Settings > About phone and tap on the build number seven times.
+* In Settings > System > Advanced > Developer options, turn on USB debugging.
+* Also in Settings > System > Advanced > Developer options, change the Default
+  USB configuration to File transfer / Android Auto.
+
+In German, that is:
+* Einstellungen > Übder das Telefon, Build-Nummer
+* Einstellungen > System > Erweitert > Entwickleroptionen, USB-Debugging
+* Standard-USB-Konfiguration: Dateiübertragung/Android Auto
