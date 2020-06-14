@@ -60,6 +60,9 @@ module.exports = env => {
     const useLibs = compileSnapshot;
     const isAnySourceMapEnabled = !!sourceMap || !!hiddenSourceMap;
     const externals = nsWebpack.getConvertedExternals(env.externals);
+    externals.push('nativescript-sqlite-commercial');
+    externals.push('nativescript-sqlite-encrypted');
+    externals.push('nativescript-sqlite-sync');
     const appFullPath = resolve(projectRoot, appPath);
     const tsConfigName = "tsconfig.tns.json";
     const tsConfigPath = join(__dirname, tsConfigName);
@@ -305,6 +308,7 @@ module.exports = env => {
                 { from: { glob: "fonts/**" } },
                 { from: { glob: "**/*.jpg" } },
                 { from: { glob: "**/*.png" } },
+                { from: { glob: "**/*.sqlite" } },
             ], { ignore: [`${relative(appPath, appResourcesFullPath)}/**`] }),
             new nsWebpack.GenerateNativeScriptEntryPointsPlugin("bundle"),
             // For instructions on how to set up workers with webpack
