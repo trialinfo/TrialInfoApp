@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Page } from "tns-core-modules/ui/page";
 import { ScrollView } from "tns-core-modules/ui/scroll-view";
-import { RouterExtensions } from "nativescript-angular/router";
+import { RouterExtensions } from "@nativescript/angular";
 import { Observable, PropertyChangeData } from "tns-core-modules/data/observable";
 import * as dialogs from "tns-core-modules/ui/dialogs";
 
@@ -11,7 +11,6 @@ import { rider_name } from '../shared/common';
 const moment = require('moment');
 
 @Component({
-    selector: "ns-protocol",
     moduleId: module.id,
     templateUrl: "./protocol.component.html",
     styleUrls: ["./protocol.component.css"],
@@ -24,6 +23,7 @@ export class ProtocolComponent extends MySideDrawer implements OnInit, OnDestroy
     scrolledToEnd: boolean;
 
     constructor(
+	private routerExtensions: RouterExtensions,
 	private page: Page,
 	private settingsService: SettingsService,
 	private dataService: DataService,
@@ -97,7 +97,7 @@ export class ProtocolComponent extends MySideDrawer implements OnInit, OnDestroy
     }
 
     item_time(item) {
-	return moment(item.time).format('HH:mm');
+	return moment(item.time).locale('de').format('HH:mm');
     }
 
     item_name(item) {
@@ -116,36 +116,33 @@ export class ProtocolComponent extends MySideDrawer implements OnInit, OnDestroy
 	return marks;
     }
 
-    tapItem(item) {
-	if (this.selected == item)
+    tapItem(item, round) {
+	if (this.selected &&
+	    this.selected.item == item)
 	    this.selected = null;
 	else {
 	    this.selected = null;
 	    if (!item.canceled)
-		this.selected = item;
+		this.selected = {
+		    item: item,
+		    round: round
+		};
 	}
     }
 
     itemHighlighted(item) {
-	return this.selected == item;
+	return this.selected &&
+	       this.selected.item == item;
     }
 
-    async cancelItem() {
-	let options = {
-	    title: 'Eintrag löschen',
-	    message: 'Sind Sie sicher, dass Sie den markierten Eintrag löschen wollen?',
-	    okButtonText: 'Ja',
-	    neutralButtonText: 'Nein'
-	};
-	let result: boolean = await dialogs.confirm(options);
-	if (result) {
-	    let item = this.selected;
-	    this.selected = null;
-
-	    /* FIXME: Suppress update via this.load() and set
-	       item.canceled manually instead? */
-
-	    await this.dataService.cancel_record(item);
-	}
+    async changeItem() {
+	let selected = this.selected;
+        this.routerExtensions.navigate(['/marks'], {
+	    queryParams: {
+		device_tag: selected.item.device_tag,
+		seq: selected.item.seq,
+		round: selected.round
+	    },
+	    clearHistory: true});
     }
 }

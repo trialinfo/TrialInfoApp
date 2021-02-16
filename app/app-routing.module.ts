@@ -1,17 +1,17 @@
 import { NgModule } from "@angular/core";
-import { NativeScriptRouterModule } from "nativescript-angular/router";
+import { NativeScriptRouterModule } from "@nativescript/angular";
 import { Routes } from "@angular/router";
 
-import { LoginComponent } from "./login/login.component";
+import { ConnectComponent } from "./connect/connect.component";
 import { RegisterComponent } from "./register/register.component";
-import { ScoringComponent } from "./scoring/scoring.component";
+import { MarksComponent } from "./marks/marks.component";
 import { TableComponent } from "./table/table.component";
 import { ProtocolComponent } from "./protocol/protocol.component";
 
 const routes: Routes = [
-    { path: "login", component: LoginComponent },
+    { path: "connect", component: ConnectComponent },
     { path: "register", component: RegisterComponent },
-    { path: "scoring", component: ScoringComponent },
+    { path: "marks", component: MarksComponent },
     { path: "table", component: TableComponent },
     { path: "protocol", component: ProtocolComponent }
 ];

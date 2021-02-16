@@ -6,11 +6,11 @@
 	</StackLayout>
 	<ScrollView row="1">
 	    <StackLayout class="sideStackLayout">
-		<Label text="Registrieren" (tap)="showLogin()" class="sideLabel"></Label>
+		<Label text="Verbinden" (tap)="showConnect()" class="sideLabel"></Label>
 		<Label text="Sektion auswählen" [isEnabled]="haveEvent" (tap)="showRegister()" class="sideLabel"></Label>
-		<Label text="Punktevergabe" [isEnabled]="zonesSelected" (tap)="showScoring()" class="sideLabel"></Label>
+		<Label text="Punktevergabe" [isEnabled]="zonesSelected" (tap)="showMarks()" class="sideLabel"></Label>
 		<Label text="Punktetabelle" [isEnabled]="zonesSelected" (tap)="showTable()" class="sideLabel"></Label>
-		<Label text="Protokoll" [isEnabled]="zonesSelected" (tap)="showProtocol()" class="sideLabel"></Label>
+		<Label text="Eingabeprotokoll" [isEnabled]="zonesSelected" (tap)="showProtocol()" class="sideLabel"></Label>
 	    </StackLayout>
 	</ScrollView>
     </GridLayout>

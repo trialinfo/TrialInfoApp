@@ -1,25 +1,24 @@
 import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef } from "@angular/core";
-import { isAndroid } from "tns-core-modules/platform";
-import * as application from "tns-core-modules/application";
-import { RouterExtensions } from "nativescript-angular/router";
+import { isAndroid } from "@nativescript/core/platform";
+import * as application from "@nativescript/core/application";
+import { RouterExtensions } from "@nativescript/angular";
 import { RadSideDrawerComponent } from "nativescript-ui-sidedrawer/angular";
 import { RadSideDrawer } from "nativescript-ui-sidedrawer";
-import { Observable, PropertyChangeData } from "tns-core-modules/data/observable";
+import { Observable, PropertyChangeData } from "@nativescript/core/data/observable";
 
 const moment = require('moment');
 
 import { SettingsService, DataService, SyncService, PollService } from "./shared";
 
 @Component({
-    selector: "ns-app",
     templateUrl: "./app.component.html",
     styleUrls: ["./app.component.css"],
 })
 export class AppComponent implements OnInit, AfterViewInit {
     @ViewChild(RadSideDrawerComponent, { static: false }) public drawerComponent: RadSideDrawerComponent;
     private sideDrawer: RadSideDrawer;
-    private haveEvent: boolean = false;
-    private zonesSelected: boolean = false;
+    public haveEvent: boolean = false;
+    public zonesSelected: boolean = false;
 
     public constructor(
 	private routerExtensions: RouterExtensions,
@@ -47,11 +46,11 @@ export class AppComponent implements OnInit, AfterViewInit {
 		let date = moment(event.date, 'YYYY-MM-DD', true);
 		if (date.isSame(now, 'day') &&
 		    this.settingsService.registeredZones.length > 0) {
-		    this.routerExtensions.navigate(['/scoring'], {clearHistory: true});
+		    this.routerExtensions.navigate(['/marks'], {clearHistory: true});
 		    return;
 		}
 	    }
-	    this.routerExtensions.navigate(['/login'], {clearHistory: true});
+	    this.routerExtensions.navigate(['/connect'], {clearHistory: true});
 	});
     }
 
@@ -81,8 +80,8 @@ export class AppComponent implements OnInit, AfterViewInit {
 	this.changeDetectorRef.detectChanges();
     }
 
-    showLogin() {
-	this.routerExtensions.navigate(['/login'], {clearHistory: true});
+    showConnect() {
+	this.routerExtensions.navigate(['/connect'], {clearHistory: true});
 	this.sideDrawer.closeDrawer();
     }
 
@@ -92,8 +91,8 @@ export class AppComponent implements OnInit, AfterViewInit {
 	this.sideDrawer.closeDrawer();
     }
 
-    showScoring() {
-	this.routerExtensions.navigate(['/scoring'], {clearHistory: true});
+    showMarks() {
+	this.routerExtensions.navigate(['/marks'], {clearHistory: true});
 	this.sideDrawer.closeDrawer();
     }
 

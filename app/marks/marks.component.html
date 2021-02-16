@@ -1,5 +1,5 @@
 <!-- <ActionBar [title]="'Sektion ' + zone"> -->
-<ActionBar title="Punktevergabe">
+<ActionBar [title]="previousItem ? 'Punkte korrigieren / löschen' : 'Punktevergabe'">
     <ActionItem>
 	<Label text="&#xf0c9;" class="fas" style="font-size:18pt" (tap)="toggleSideDrawer()"></Label>
     </ActionItem>
@@ -8,7 +8,7 @@
 <DockLayout stretchLastChild="true">
     <StackLayout dock="bottom">
 	<GridLayout columns="*,*,*" rows="auto,*,*,*,*,*" height="50%" [visibility]="keypad == 'number' ? 'visible' : 'collapsed'">
-	    <Label row="0" col="0" colspan="3" [text]="enterNextNumber ? 'Nächste Startnummer' : 'Startnummer'" class="keypad-title"></Label>
+	    <Label row="0" col="0" colspan="3" [text]="showPreviousMarks ? 'Nächste Startnummer' : 'Startnummer'" class="keypad-title"></Label>
 	    <Button row="1" col="0" text="1" class="text" (tap)="enterDigit(1)" [isEnabled]="!!nextNumberDigits[1]"></Button>
 	    <Button row="1" col="1" text="2" class="text" (tap)="enterDigit(2)" [isEnabled]="!!nextNumberDigits[2]"></Button>
 	    <Button row="1" col="2" text="3" class="text" (tap)="enterDigit(3)" [isEnabled]="!!nextNumberDigits[3]"></Button>
@@ -19,8 +19,8 @@
 	    <Button row="3" col="1" text="8" class="text" (tap)="enterDigit(8)" [isEnabled]="!!nextNumberDigits[8]"></Button>
 	    <Button row="3" col="2" text="9" class="text" (tap)="enterDigit(9)" [isEnabled]="!!nextNumberDigits[9]"></Button>
 	    <Button row="4" col="1" text="0" class="text" (tap)="enterDigit(0)" [isEnabled]="!!nextNumberDigits[0]"></Button>
-	    <Button row="5" col="1" text="&#xf101;" class="fas icon" (tap)="confirmNumber()" [isEnabled]="rider != null && !enterNextNumber"></Button>
-	    <Button row="5" col="2" text="&#x232b;" class="icon" (tap)="numberBack()" [visibility]="(number == null || enterNextNumber) ? 'hidden' : 'visible'"></Button>
+	    <Button row="5" col="1" text="&#xf101;" class="fas icon" (tap)="confirmNumber()" [isEnabled]="rider != null && !showPreviousMarks"></Button>
+	    <Button row="5" col="2" text="&#x232b;" class="icon" (tap)="numberBack()" [visibility]="(number == null || showPreviousMarks) ? 'hidden' : 'visible'"></Button>
 	</GridLayout>
 	<GridLayout columns="*,*,*" rows="auto,*,*" height="20%" [visibility]="keypad == 'timer' ? 'visible' : 'collapsed'">
 	    <Label row="0" col="0" colspan="3" text="Stoppuhr" class="keypad-title"></Label>
@@ -52,31 +52,41 @@
 	    <Button row="5" col="2" text="&#x232b;" class="icon" (tap)="marksBack()"></Button>
 	</GridLayout>
 	<GridLayout columns="*,*,*" rows="auto,*" height="10%" [visibility]="keypad == 'confirm' && !event.uci_x10 ? 'visible' : 'collapsed'">
-	    <Label row="0" col="0" colspan="3" text="Bestätigen" class="keypad-title" (tap)="confirmMarks()"></Label>
+	    <Label row="0" col="0" colspan="3" text="Bestätigen" class="keypad-title" (tap)="confirmMarks()" *ngIf="!previousItem"></Label>
+	    <Label row="0" col="0" colspan="3" text="Korrigieren" class="keypad-title" (tap)="updateMarks()" *ngIf="previousItem && modified()"></Label>
+	    <Label row="0" col="0" colspan="3" text="Löschen" class="keypad-title" (tap)="deleteMarks()" *ngIf="previousItem && !modified()"></Label>
 	    <Button row="1" col="0" text="+5" class="text" (tap)="enterPenaltyMarks(5)" [isEnabled]="penalty_marks == null"></Button>
-	    <Button row="1" col="1" text="&#xf058;" class="fas icon" (tap)="confirmMarks()"></Button>
+	    <Button row="1" col="1" text="&#xf058;" class="fas icon" (tap)="confirmMarks()" *ngIf="!previousItem"></Button>
+	    <Button row="1" col="1" text="&#xf058;" class="fas icon" (tap)="updateMarks()" *ngIf="previousItem && modified()"></Button>
+	    <Button row="1" col="1" text="&#xf2ed;" class="far icon" (tap)="deleteMarks()" *ngIf="previousItem && !modified()"></Button>
 	    <Button row="1" col="2" text="&#x232b;" class="icon" (tap)="confirmBack()"></Button>
 	</GridLayout>
 	<GridLayout columns="*,*,*" rows="auto,*" height="10%" [visibility]="keypad == 'confirm' && event.uci_x10 ? 'visible' : 'collapsed'">
-	    <Label row="0" col="0" colspan="3" text="Bestätigen" class="keypad-title" (tap)="confirmMarks()"></Label>
+	    <Label row="0" col="0" colspan="3" text="Bestätigen" class="keypad-title" (tap)="confirmMarks()" *ngIf="!previousItem"></Label>
+	    <Label row="0" col="0" colspan="3" text="Korrigieren" class="keypad-title" (tap)="updateMarks()" *ngIf="previousItem && modified()"></Label>
+	    <Label row="0" col="0" colspan="3" text="Löschen" class="keypad-title" (tap)="deleteMarks()" *ngIf="previousItem && !modified()"></Label>
 	    <Button row="1" col="0" text="−100" class="text" (tap)="enterPenaltyMarks(-100)" [isEnabled]="penalty_marks == null"></Button>
-	    <Button row="1" col="1" text="&#xf058;" class="fas icon" (tap)="confirmMarks()"></Button>
+	    <Button row="1" col="1" text="&#xf058;" class="fas icon" (tap)="confirmMarks()" *ngIf="!previousItem"></Button>
+	    <Button row="1" col="1" text="&#xf362;" class="fas icon" (tap)="updateMarks()" *ngIf="previousItem && modified()"></Button>
+	    <Button row="1" col="1" text="&#xf2ed;" class="far icon" (tap)="deleteMarks()" *ngIf="previousItem && !modified()"></Button>
 	    <Button row="1" col="2" text="&#x232b;" class="icon" (tap)="confirmBack()"></Button>
 	</GridLayout>
     </StackLayout>
     <ScrollView dock="top">
 	<DockLayout stretchLastChild="true">
 	    <DockLayout dock="top" [color]="riderColor() || ''" [backgroundColor]="riderBackgroundColor() || ''">
-		<Label dock="right" [text]="previousMarksText()" class="rider-previous-marks text-right m-l-5 m-r-5 m-y-auto"></Label>
+		<Label alignSelf="center" dock="right" [text]="previousMarksText()" class="rider-previous-marks text-right m-l-5 m-r-5 m-y-auto"></Label>
 		<FlexboxLayout dock="left" flexDirection="row">
-		    <Label [text]="number" alignSelf="center" class="rider-number m-l-5 m-r-5"></Label>
-		    <Label [text]="rider_name(rider)" alignSelf="center" class="rider-name m-l-5 m-r-5"></Label>
+		    <Label alignSelf="center" [text]="number" class="rider-number m-l-5 m-r-5"></Label>
+		    <Label alignSelf="center" [text]="rider_name(rider)" class="rider-name m-l-5 m-r-5"></Label>
 		</FlexboxLayout>
 	    </DockLayout>
-	    <DockLayout dock="bottom" stretchLastChild="true">
-		<Label [text]="showTimeout()" class="timer text-center m-y-auto" *ngIf="keypad == 'timer'"></Label>
-		<Label [text]="marksText()" class="rider-marks text-center m-y-auto" *ngIf="keypad == 'confirm'"></Label>
-	    </DockLayout>
+	    <FlexboxLayout justifyContent="center" flexDirection="column">
+		<Label alignSelf="center" [text]="showTimeout()" class="timer text-center m-y-auto" *ngIf="keypad == 'timer'"></Label>
+		<Label alignSelf="center" [text]="previousRoundText()" class="item-info text-center m-y-auto" *ngIf="(keypad == 'marks' || keypad == 'confirm') && previousItem"></Label>
+		<Label alignSelf="center" [text]="previousTime()" class="item-info text-center m-y-auto" *ngIf="(keypad == 'marks' || keypad == 'confirm') && previousItem"></Label>
+		<Label alignSelf="center" [text]="marksText()" class="rider-marks text-center m-y-auto" *ngIf="keypad == 'confirm'"></Label>
+	    </FlexboxLayout>
 	</DockLayout>
     </ScrollView>
 </DockLayout>

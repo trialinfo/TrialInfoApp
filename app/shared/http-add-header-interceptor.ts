@@ -1,3 +1,4 @@
+import { Injectable } from "@angular/core";
 import {
   HttpEvent,
   HttpInterceptor,
@@ -8,6 +9,7 @@ import { Observable } from 'rxjs';
 
 import { SettingsService } from '.';
 
+@Injectable()
 export class AddHeaderInterceptor implements HttpInterceptor {
   constructor(private settingsService: SettingsService) { }
 

@@ -1,6 +1,7 @@
 import { Observable, PropertyChangeData } from "tns-core-modules/data/observable";
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { RouterExtensions } from "nativescript-angular/router";
+import { ActivatedRoute } from "@angular/router";
+import { RouterExtensions } from "@nativescript/angular";
 import * as timer from "tns-core-modules/timer";
 import * as dialogs from "tns-core-modules/ui/dialogs";
 
@@ -24,33 +25,36 @@ function item_text(item) {
 }
 
 @Component({
-    selector: 'ns-scoring',
     moduleId: module.id,
-    templateUrl: './scoring.component.html',
-    styleUrls: ['./scoring.component.css'],
+    templateUrl: './marks.component.html',
+    styleUrls: ['./marks.component.css'],
 })
-export class ScoringComponent extends MySideDrawer implements OnInit, OnDestroy {
-    private event: any;
-    private rider: any;
-    private keypad: string;
-    private timer: string;
+export class MarksComponent extends MySideDrawer implements OnDestroy {
+    public event: any;
+    public rider: any;
+    public keypad: string;
+    public timer: string;
 
     private timeout: number;
     private timerEnds: number;
     private timerId: number;
-
-    private zone: number;
-    private number: number;
-    private enterNextNumber: boolean;
-    private nextNumberDigits: any;
     private items: any = [];
-    private marks: number;
-    private penalty_marks: number;
+
+    public zone: number;
+    public number: number;
+    public showPreviousMarks: boolean;
+    public nextNumberDigits: any;
+    public marks: number;
+    public penalty_marks: number;
+
+    public previousItem: any;
+    public previousRound: number;
 
     constructor(
 	private settingsService: SettingsService,
 	private dataService: DataService,
 	private computeService: ComputeService,
+	private route: ActivatedRoute,
 	private routerExtensions: RouterExtensions) {
 	super();
 	this.dataService.addEventListener(
@@ -59,6 +63,29 @@ export class ScoringComponent extends MySideDrawer implements OnInit, OnDestroy 
 	this.computeService.addEventListener(
 	    Observable.propertyChangeEvent,
 	    this.computeChangeListener, this);
+	this.route.queryParams.subscribe(
+	    (params) => this.openPage(params));
+    }
+
+    private openPage(params) {
+	this.event = this.dataService.event;
+	this.zone = this.settingsService.registeredZones[0];
+	this.reset();
+	if (params.device_tag && params.seq) {
+	    let item = this.dataService.getItem(params.device_tag, +params.seq);
+	    this.previousItem = item;
+	    if (item) {
+		this.previousRound = +params.round;
+		this.zone = item.zone;
+		this.number = item.number;
+		this.marks = item.marks;
+		if (item.penalty_marks != null)
+		    this.penalty_marks = item.penalty_marks;
+		/* FIXME: Make sure the previous item hasn't been canceled already! */
+		this.numberChanged();
+		this.keypad = 'confirm';
+	    }
+	}
     }
 
     dataChangeListener(args: PropertyChangeData): void {
@@ -73,19 +100,12 @@ export class ScoringComponent extends MySideDrawer implements OnInit, OnDestroy 
 	    this.numberChanged();
     }
 
-    ngOnInit(): void {
-	this.event = this.dataService.event;
-	this.zone = this.settingsService.registeredZones[0];
+    ngOnDestroy() {
 	this.reset();
     }
 
-    ngOnDestroy() {
-	if (this.timerId != null)
-	    timer.clearTimeout(this.timerId);
-    }
-
     reset() {
-	if (!this.enterNextNumber)
+	if (!this.showPreviousMarks)
 	    this.number = null;
 	this.numberChanged();
 	/*
@@ -96,14 +116,20 @@ export class ScoringComponent extends MySideDrawer implements OnInit, OnDestroy 
 	    this.enterDigit(+digits[0]);
 	}
 	*/
+	this.previousItem = null;
+	this.previousRound = null;
 	this.marks = null;
 	this.penalty_marks = null;
 	this.keypad = 'number';
+	if (this.timerId != null) {
+	    timer.clearTimeout(this.timerId);
+	    this.timerId = null;
+	}
     }
 
     enterDigit(digit: number) {
-	if (this.enterNextNumber) {
-	    this.enterNextNumber = false;
+	if (this.showPreviousMarks) {
+	    this.showPreviousMarks = false;
 	    this.number = null;
 	}
 	if (this.number == null)
@@ -121,7 +147,7 @@ export class ScoringComponent extends MySideDrawer implements OnInit, OnDestroy 
 	this.numberChanged();
     }
 
-    riderChanged() {
+    private riderChanged() {
 	if (!this.rider) {
 	    this.items = [];
 	    return;
@@ -143,7 +169,7 @@ export class ScoringComponent extends MySideDrawer implements OnInit, OnDestroy 
 	})();
 	this.riderChanged();
 	this.nextNumberDigits = this.computeService.nextNumberDigits(this.zone,
-	    this.enterNextNumber ? null : this.number);
+	    this.showPreviousMarks ? null : this.number);
     }
 
     riderBackgroundColor() {
@@ -243,7 +269,7 @@ export class ScoringComponent extends MySideDrawer implements OnInit, OnDestroy 
     showTimeout() {
 	let seconds = Math.ceil(this.timeout / 1000);
 	let m = moment(new Date(0, 0, 0, 0, 0, seconds));
-	let format = m.hours() != 0 ? 'h:mm:ss' : 'm:ss';
+	let format = m.hours() != 0 ? 'H:mm:ss' : 'm:ss';
 	return m.format(format);
     }
 
@@ -309,15 +335,49 @@ export class ScoringComponent extends MySideDrawer implements OnInit, OnDestroy 
 	this.penalty_marks = marks;
     }
 
-    async confirmMarks() {
-	await this.dataService.record({
+    currentItem() {
+	return {
 	    zone: this.zone,
 	    number: this.number,
 	    marks: this.marks,
 	    penalty_marks: this.penalty_marks
-	});
-	this.enterNextNumber = true;
+	};
+    }
+
+    async confirmMarks() {
+	await this.dataService.record(this.currentItem());
+	this.showPreviousMarks = true;
 	this.reset();
+    }
+
+    async updateMarks() {
+	let options = {
+	    title: 'Punkte korrigieren',
+	    message: 'Sind Sie sicher, dass Sie die Punkte korrigieren wollen?',
+	    okButtonText: 'Ja',
+	    neutralButtonText: 'Nein'
+	};
+	let result: boolean = await dialogs.confirm(options);
+	if (result) {
+	    await this.dataService.updateRecord(this.previousItem, this.currentItem());
+	    this.showPreviousMarks = true;
+	    this.reset();
+	}
+    }
+
+    async deleteMarks() {
+	let options = {
+	    title: 'Punkte löschen',
+	    message: 'Sind Sie sicher, dass Sie die Punkte löschen wollen?',
+	    okButtonText: 'Ja',
+	    neutralButtonText: 'Nein'
+	};
+	let result: boolean = await dialogs.confirm(options);
+	if (result) {
+	    await this.dataService.updateRecord(this.previousItem, null);
+	    this.showPreviousMarks = true;
+	    this.reset();
+	}
     }
 
     confirmBack() {
@@ -349,5 +409,25 @@ export class ScoringComponent extends MySideDrawer implements OnInit, OnDestroy 
     rider_name(rider) {
 	if (rider)
 	    return rider_name(rider);
+    }
+
+    previousRoundText() {
+	return `Runde ${this.previousRound}`;
+    }
+
+    previousTime() {
+	let time = moment(this.previousItem.time);
+	let date = moment(this.event.date, 'YYYY-MM-DD', true);
+	if (!date.isAfter(time) && date.add(1, 'day').isAfter(time))
+	    return time.locale('de').format('HH:mm');
+	else
+	    return time.locale('de').format('D. MMMM YYYY, HH:mm');
+    }
+
+    modified() {
+	let item = this.previousItem;
+	return item &&
+	       (item.marks != this.marks ||
+	        item.penalty_marks != this.penalty_marks);
     }
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
-import { RouterExtensions } from "nativescript-angular/router";
+import { RouterExtensions } from "@nativescript/angular";
 import { Observable, PropertyChangeData } from "tns-core-modules/data/observable";
 import * as dialogs from "tns-core-modules/ui/dialogs";
 import * as timer from "tns-core-modules/timer";
@@ -9,7 +9,6 @@ import { SettingsService, DataService, MySideDrawer } from "../shared";
 const deepEqual = require("deep-equal");
 
 @Component({
-    selector: "ns-register",
     moduleId: module.id,
     templateUrl: "./register.component.html",
     styleUrls: ["./register.component.css"],
@@ -120,6 +119,6 @@ export class RegisterComponent extends MySideDrawer implements OnInit, OnDestroy
 	}
 	this.oldZones = zones;
 	if (zones.length != 0)
-	    this.routerExtensions.navigate(["/scoring"], {clearHistory: true});
+	    this.routerExtensions.navigate(["/marks"], {clearHistory: true});
     }
 }

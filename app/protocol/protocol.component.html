@@ -1,4 +1,4 @@
-<ActionBar title="Protokoll">
+<ActionBar title="Eingabeprotokoll">
     <ActionItem>
 	<Label text="&#xf0c9;" class="fas" style="font-size:18pt" (tap)="toggleSideDrawer()"></Label>
     </ActionItem>
@@ -7,7 +7,7 @@
 <DockLayout stretchLastChild="true">
     <StackLayout dock="bottom">
 	<GridLayout columns="*,*,*" rows="*" height="10%" [visibility]="true ? 'visible' : 'collapsed'">
-	    <Button row="0" col="1" text="&#xf2ed;" class="far icon" (tap)="cancelItem()" [isEnabled]="selected != null"></Button>
+	    <Button row="0" col="1" text="&#xf044;" class="far icon" (tap)="changeItem()" [isEnabled]="selected != null"></Button>
 	</GridLayout>
     </StackLayout>
     <ScrollView orientation="horizontal">
@@ -21,35 +21,35 @@
 		    <Label col="3" row="0" text="Name" class="p-2"></Label>
 		    <Label col="4" row="0" text="Punkte" class="text-center p-2"></Label>
 		    <Label col="0" [row]="i + 1" [text]="item_time(item)"
-		     (tap)="tapItem(item)"
+		     (tap)="tapItem(item, rounds[zone][i])"
 		     class="text-center p-2"
 		     [ngClass]="{
 			 'highlighted': itemHighlighted(item),
 			'canceled': item.canceled}"
 		     *ngFor="let item of zones[zone]; index as i"></Label>
 		    <Label col="1" [row]="i + 1" [text]="rounds[zone][i]"
-		     (tap)="tapItem(item)"
+		     (tap)="tapItem(item, rounds[zone][i])"
 		     class="text-center p-2"
 		     [ngClass]="{
 			 'highlighted': itemHighlighted(item),
 			'canceled': item.canceled}"
 		     *ngFor="let item of zones[zone]; index as i"></Label>
 		    <Label col="2" [row]="i + 1" [text]="item.number"
-		     (tap)="tapItem(item)"
+		     (tap)="tapItem(item, rounds[zone][i])"
 		     class="text-center p-2"
 		     [ngClass]="{
 			 'highlighted': itemHighlighted(item),
 			'canceled': item.canceled}"
 		     *ngFor="let item of zones[zone]; index as i"></Label>
 		    <Label col="3" [row]="i + 1" [text]="item_name(item)"
-		     (tap)="tapItem(item)"
+		     (tap)="tapItem(item, rounds[zone][i])"
 		     class="p-2"
 		     [ngClass]="{
 			 'highlighted': itemHighlighted(item),
 			'canceled': item.canceled}"
 		     *ngFor="let item of zones[zone]; index as i"></Label>
 		    <Label col="4" [row]="i + 1" [text]="item_marks(item)"
-		     (tap)="tapItem(item)"
+		     (tap)="tapItem(item, rounds[zone][i])"
 		     class="text-center p-2"
 		     [ngClass]="{
 			 'highlighted': itemHighlighted(item),

@@ -1,9 +1,11 @@
 import { Component, OnInit } from "@angular/core";
-import { RouterExtensions } from "nativescript-angular/router";
+import { RouterExtensions } from "@nativescript/angular";
 import * as dialogs from "tns-core-modules/ui/dialogs";
 import { BarcodeScanner } from 'nativescript-barcodescanner';
 
 import { SettingsService, DataService, SyncService, PollService, MySideDrawer } from "../shared";
+
+const moment = require('moment');
 
 function parseQuery(queryString): any {
     let args = {};
@@ -18,16 +20,16 @@ function parseQuery(queryString): any {
 }
 
 @Component({
-    selector: "ns-login",
     moduleId: module.id,
-    templateUrl: "./login.component.html",
-    styleUrls: ["./login.component.css"],
+    templateUrl: "./connect.component.html",
+    styleUrls: ["./connect.component.css"],
 })
-export class LoginComponent extends MySideDrawer implements OnInit {
-    serverUrl: string;
-    syncServerUrl: string;
-    accessToken: string;
-    busy: boolean;
+export class ConnectComponent extends MySideDrawer implements OnInit {
+    serverUrl: string = '';
+    syncServerUrl: string = '';
+    accessToken: string = '';
+    busy: boolean = false;
+    editing: boolean = false;
 
     constructor(
 	private settingsService: SettingsService,
@@ -44,7 +46,16 @@ export class LoginComponent extends MySideDrawer implements OnInit {
 	this.accessToken = this.settingsService.accessToken;
     }
 
+    filledOut() {
+	for (let field of ['serverUrl', 'syncServerUrl', 'accessToken']) {
+	    if (this[field] == '')
+		this[field] = null;
+	}
+	return this.serverUrl != null && this.accessToken != null;
+    }
+
     async scan() {
+	this.editing = false;
 	let result = await new BarcodeScanner().scan({
 	    message: 'QR-Code aus TrialInfo-Einstellungen',
 	    resultDisplayDuration: 0
@@ -81,5 +92,24 @@ export class LoginComponent extends MySideDrawer implements OnInit {
 	    this.busy = false;
 	}
 	this.routerExtensions.navigate(['/register'], {clearHistory: true});
+    }
+
+    async edit() {
+	this.editing = !this.editing;
+    }
+
+    eventName() {
+	let event = this.dataService.event;
+	if (!event)
+	    return;
+	return event.location;
+    }
+
+    eventDate() {
+	let event = this.dataService.event;
+	if (!event)
+	    return;
+	let date = moment(event.date, 'YYYY-MM-DD', true);
+	return date.locale('de').format('D. MMMM YYYY');
     }
 }

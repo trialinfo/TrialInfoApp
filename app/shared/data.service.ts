@@ -122,6 +122,10 @@ export class DataService extends Observable {
 	return item.canceled_device != null && item.canceled_seq != null;
     }
 
+    isNullItem(item) {
+	return item.marks == null && item.penalty_marks == null;
+    }
+
     async record(item) {
 	let deviceTag = this.settingsService.deviceTag;
 	item = Object.assign({}, item, {
@@ -137,14 +141,28 @@ export class DataService extends Observable {
 	await this.sqlInsertItem(deviceTag, item);
     }
 
-    async cancel_record(item) {
-	let canceled_item = Object.assign({}, item, {
-	    canceled_device: item.device_tag,
-	    canceled_seq: item.seq
-	});
-	delete canceled_item.device_tag;
-	delete canceled_item.seq;
-	await this.record(canceled_item);
+    getItem(deviceTag, seq) {
+	let items = this.protocol[deviceTag];
+	for (let item of items) {
+	    if (item.seq == seq)
+		return Object.assign({device_tag: deviceTag}, item);
+	}
+    }
+
+    async updateRecord(oldItem, newItem) {
+	let updateItem = {
+	    canceled_device: oldItem.device_tag,
+	    canceled_seq: oldItem.seq
+	};
+	for (let field of ['number', 'zone'])
+	    updateItem[field] = oldItem[field];
+	if (newItem) {
+	    Object.assign(updateItem, {
+		marks: newItem.marks,
+		penalty_marks: newItem.penalty_marks
+	    });
+	}
+	await this.record(updateItem);
     }
 
     private updateProtocol(update): boolean {

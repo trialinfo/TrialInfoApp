@@ -60,6 +60,8 @@ class SyncTarget {
 		return;
 	    if (!this.seq)
 		this.seq = {};
+	    for (let deviceTag in response.seq || {})
+		this.seq[deviceTag] = response.seq[deviceTag];
 	    this.syncDelay =
 		Math.max(this.syncDelay / 2, minSyncDelay);
 	    this.sync();

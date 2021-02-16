@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
-import { RouterExtensions } from "nativescript-angular/router";
+import { RouterExtensions } from "@nativescript/angular";
 import { Observable, PropertyChangeData } from "tns-core-modules/data/observable";
 import * as dialogs from "tns-core-modules/ui/dialogs";
 
@@ -7,7 +7,6 @@ import { SettingsService, DataService, ComputeService, MySideDrawer } from "../s
 import { rider_name, merge_sorted, range } from '../shared/common';
 
 @Component({
-    selector: "ns-table",
     moduleId: module.id,
     templateUrl: "./table.component.html",
     styleUrls: ["./table.component.css"],
@@ -19,6 +18,7 @@ export class TableComponent extends MySideDrawer implements OnInit, OnDestroy {
     selected: any;
 
     constructor(
+	private routerExtensions: RouterExtensions,
 	private settingsService: SettingsService,
 	private dataService: DataService,
 	private computeService: ComputeService) {
@@ -165,22 +165,14 @@ export class TableComponent extends MySideDrawer implements OnInit, OnDestroy {
 	       this.selected.round == round;
     }
 
-    async cancelMarks() {
-	let options = {
-	    title: 'Punke löschen',
-	    message: 'Sind Sie sicher, dass Sie die markierten Punkte löschen wollen?',
-	    okButtonText: 'Ja',
-	    neutralButtonText: 'Nein'
-	};
-	let result: boolean = await dialogs.confirm(options);
-	if (result) {
-	    let item = this.selected.item;
-	    this.selected = null;
-
-	    /* FIXME: Suppress update via this.load() and remove
-	       item manually instead? */
-
-	    await this.dataService.cancel_record(item);
-	}
+    async changeItem() {
+	let selected = this.selected;
+        this.routerExtensions.navigate(['/marks'], {
+	    queryParams: {
+		device_tag: selected.item.device_tag,
+		seq: selected.item.seq,
+		round: selected.round
+	    },
+	    clearHistory: true});
     }
 }

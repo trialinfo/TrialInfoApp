@@ -1,0 +1,25 @@
+<ActionBar title="Verbinden">
+    <ActionItem>
+	<Label text="&#xf0c9;" class="fas" style="font-size:18pt" (tap)="toggleSideDrawer()"></Label>
+    </ActionItem>
+</ActionBar>
+
+<FlexboxLayout width="auto">
+    <DockLayout stretchLastChild="true">
+	<GridLayout dock="bottom" columns="*,*,*" rows="*" height="10%">
+	    <Button row="0" col="0" text="&#xf029;" class="fas icon" (tap)="scan()" [isEnabled]="!busy"></Button>
+	    <Button row="0" col="1" text="&#xf101;" class="fas icon" (tap)="connect()" [isEnabled]="!busy && filledOut()"></Button>
+	    <Button row="0" col="2" text="&#xf044;" class="far icon" (tap)="edit()" [isEnabled]="!busy"></Button>
+	</GridLayout>
+	<StackLayout dock="top" *ngIf="editing">
+	    <TextField hint="Server" keyboardType="url" autocorrect="false" autocapitalizationType="none" [(ngModel)]="serverUrl" [isEnabled]="!busy"></TextField>
+	    <TextField hint="Sync Server" keyboardType="url" autocorrect="false" autocapitalizationType="none" [(ngModel)]="syncServerUrl" [isEnabled]="!busy"></TextField>
+	    <TextField hint="Zugriffscode" autocorrect="false" secure="true" autocapitalizationType="none" [(ngModel)]="accessToken" [isEnabled]="!busy"></TextField>
+	</StackLayout>
+	<StackLayout dock="top" verticalAlignment="center" *ngIf="!editing">
+	    <Label [text]="eventName()" class="text-center p-2"></Label>
+	    <Label [text]="eventDate()" class="text-center p-2"></Label>
+	    <!-- FIXME: Show registered zones -->
+	</StackLayout>
+    </DockLayout>
+</FlexboxLayout>

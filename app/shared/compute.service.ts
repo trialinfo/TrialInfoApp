@@ -122,7 +122,7 @@ export class ComputeService extends Observable {
     chronologicalProtocol() {
 	let canceled = this.dataService.canceled;
 	let protocol = this.chronologicalSort(this.dataService.protocol)
-	.filter((item) => !this.dataService.isCancelItem(item))
+	.filter((item) => !this.dataService.isNullItem(item))
 	.map((item) => {
 	    let canceled_device = canceled[item.device_tag];
 	    if (canceled_device && canceled_device[item.seq])
