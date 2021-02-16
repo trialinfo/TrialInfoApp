@@ -7,12 +7,13 @@
 <FlexboxLayout width="auto">
     <DockLayout stretchLastChild="true">
 	<GridLayout dock="bottom" columns="*,*,*" rows="*" height="10%">
-	    <Button row="0" col="1" text="&#xf101;" class="fas icon" (tap)="connect()"></Button>
+	    <Button row="0" col="1" text="&#xf101;" class="fas icon" (tap)="connect()" [isEnabled]="!busy"></Button>
 	</GridLayout>
 	<StackLayout dock="top">
-	    <TextField hint="Server-URL" keyboardType="url" autocorrect="false" autocapitalizationType="none" [(ngModel)]="serverUrl"></TextField>
-	    <!-- <TextField hint="Sync-Server-URL" keyboardType="url" autocorrect="false" autocapitalizationType="none" [(ngModel)]="syncServerUrl"></TextField> -->
-	    <TextField hint="Zugriffs-Token" autocorrect="false" autocapitalizationType="none" [(ngModel)]="accessToken"></TextField>
+	    <TextField hint="Server" keyboardType="url" autocorrect="false" autocapitalizationType="none" [(ngModel)]="serverUrl"></TextField>
+	    <TextField hint="Sync Server" keyboardType="url" autocorrect="false" autocapitalizationType="none" [(ngModel)]="syncServerUrl"></TextField>
+	    <TextField hint="Zugriffscode" autocorrect="false" secure="true" autocapitalizationType="none" [(ngModel)]="accessToken"></TextField>
+	    <Button text="Scannen" (tap)="scan()"></Button>
 	</StackLayout>
     </DockLayout>
 </FlexboxLayout>
