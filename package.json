@@ -1,8 +1,8 @@
 {
   "main": "main.js",
-  "description": "NativeScript Application",
-  "license": "SEE LICENSE IN <your-license-filename>",
-  "repository": "<fill-your-repository-here>",
+  "description": "TrialInfo",
+  "license": "AGPLv3",
+  "repository": "https://github.com/trialinfo/TrialInfoApp",
   "dependencies": {
     "@angular/animations": "~11.0.0",
     "@angular/common": "~11.0.0",

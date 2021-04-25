@@ -1,7 +1,7 @@
 import { NativeScriptConfig } from '@nativescript/core';
 
 export default {
-  id: 'at.trialinfo.scoring',
+  id: 'at.trialinfo.TrialInfo',
   appPath: 'app',
   appResourcesPath: 'App_Resources',
   webpackConfigPath: 'webpack.config.js',
