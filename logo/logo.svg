@@ -13,9 +13,45 @@
    version="1.1"
    id="svg1117"
    inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
-   sodipodi:docname="logo.svg">
+   sodipodi:docname="logo.svg"
+   inkscape:export-filename="/home/agruenba/git/TrialInfoApp/App_Resources/Android/src/main/res/drawable-hdpi/logo.png"
+   inkscape:export-xdpi="36"
+   inkscape:export-ydpi="36">
   <defs
-     id="defs1111" />
+     id="defs1111">
+    <filter
+       style="color-interpolation-filters:sRGB"
+       inkscape:label="Drop Shadow"
+       id="filter1740">
+      <feFlood
+         flood-opacity="0.498039"
+         flood-color="rgb(0,0,0)"
+         result="flood"
+         id="feFlood1730" />
+      <feComposite
+         in="flood"
+         in2="SourceGraphic"
+         operator="in"
+         result="composite1"
+         id="feComposite1732" />
+      <feGaussianBlur
+         in="composite1"
+         stdDeviation="0.3"
+         result="blur"
+         id="feGaussianBlur1734" />
+      <feOffset
+         dx="0"
+         dy="0.6"
+         result="offset"
+         id="feOffset1736" />
+      <feComposite
+         in="SourceGraphic"
+         in2="offset"
+         operator="over"
+         result="composite2"
+         id="feComposite1738" />
+    </filter>
+  </defs>
   <sodipodi:namedview
      id="base"
      pagecolor="#e2e2e9"
@@ -56,7 +92,7 @@
        aria-label="TrialInfo"
        id="text1382"
        style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#454545;fill-opacity:1;stroke:none;stroke-width:0.264583"
-       transform="matrix(2.5811374,0,0,2.5811374,-148.27625,-414.23651)">
+       transform="matrix(2.5811374,0,0,2.5811374,-148.27625,-423.23532)">
       <path
          d="m 72.551737,237.44748 h 7.110655 v 1.50378 h -2.557976 v 6.21149 H 75.11488 v -6.21149 h -2.563143 z"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';fill:#454545;fill-opacity:1;stroke-width:0.264583"
@@ -96,7 +132,10 @@
     </g>
     <g
        id="g1542"
-       transform="matrix(2.3768516,0,0,2.3768516,-110.26225,-363.32223)">
+       style="filter:url(#filter1740)"
+       transform="matrix(2.014456,0,0,2.014456,-77.959875,-291.39508)"
+       inkscape:export-xdpi="288.35001"
+       inkscape:export-ydpi="288.35001">
       <path
          id="path582-1-6-9-1-5"
          style="fill:#eeeeee;fill-opacity:1;stroke-width:0.0820919"

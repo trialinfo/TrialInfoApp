@@ -7,15 +7,51 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="75.166603mm"
-   height="72.616158mm"
-   viewBox="0 0 75.166601 72.616158"
+   width="512"
+   height="512"
+   viewBox="0 0 135.46496 135.46496"
    version="1.1"
    id="svg933"
    inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
-   sodipodi:docname="icon2.svg">
+   sodipodi:docname="icon.svg"
+   inkscape:export-filename="/home/agruenba/bitmap.png"
+   inkscape:export-xdpi="288.35001"
+   inkscape:export-ydpi="288.35001">
   <defs
-     id="defs927" />
+     id="defs927">
+    <filter
+       style="color-interpolation-filters:sRGB"
+       inkscape:label="Drop Shadow"
+       id="filter1740">
+      <feFlood
+         flood-opacity="0.498039"
+         flood-color="rgb(0,0,0)"
+         result="flood"
+         id="feFlood1730" />
+      <feComposite
+         in="flood"
+         in2="SourceGraphic"
+         operator="in"
+         result="composite1"
+         id="feComposite1732" />
+      <feGaussianBlur
+         in="composite1"
+         stdDeviation="0.3"
+         result="blur"
+         id="feGaussianBlur1734" />
+      <feOffset
+         dx="0"
+         dy="0.6"
+         result="offset"
+         id="feOffset1736" />
+      <feComposite
+         in="SourceGraphic"
+         in2="offset"
+         operator="over"
+         result="composite2"
+         id="feComposite1738" />
+    </filter>
+  </defs>
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -23,10 +59,10 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="3.959798"
-     inkscape:cx="205.15643"
-     inkscape:cy="104.93224"
-     inkscape:document-units="mm"
+     inkscape:zoom="1.979899"
+     inkscape:cx="223.2118"
+     inkscape:cy="266.36401"
+     inkscape:document-units="px"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
      showgrid="false"
@@ -39,7 +75,8 @@
      inkscape:window-height="2075"
      inkscape:window-x="0"
      inkscape:window-y="46"
-     inkscape:window-maximized="1" />
+     inkscape:window-maximized="1"
+     units="px" />
   <metadata
      id="metadata930">
     <rdf:RDF>
@@ -56,9 +93,13 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-51.55236,-160.49377)">
+     transform="translate(-44.035699,-153.23215)">
     <g
-       id="g1542">
+       id="g1542"
+       style="filter:url(#filter1740)"
+       transform="matrix(1.4742871,0,0,1.4742871,-17.460626,-75.047011)"
+       inkscape:export-xdpi="288.35001"
+       inkscape:export-ydpi="288.35001">
       <path
          id="path582-1-6-9-1-5"
          style="fill:#eeeeee;fill-opacity:1;stroke-width:0.0820919"
