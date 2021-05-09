@@ -104,17 +104,27 @@ export class ComputeService extends Observable {
     private chronologicalSort(protocol) {
 	let items = [];
 
+	let itemTime = (item) => {
+	    if (this.dataService.isCancelItem(item)) {
+		let canceledItem = this.dataService.getItem(
+		    item.canceled_device, item.canceled_seq);
+		if (canceledItem)
+		    return itemTime(canceledItem);
+	    }
+	    return item.time;
+	};
+
 	let sort = (deviceTag, items) =>
 	    items
 	    .filter((item) => item.time != null)
 	    .map((item) => Object.assign({ device_tag: deviceTag }, item))
-	    .sort((a, b) => a.time.getTime() - b.time.getTime());
+	    .sort((a, b) => itemTime(a).getTime() - itemTime(b).getTime());
 
 	for (let deviceTag in protocol) {
 	    items = merge_sorted(
 		items,
 		sort(deviceTag, protocol[deviceTag]),
-		(a, b) => a.time.getTime() < b.time.getTime());
+		(a, b) => itemTime(a).getTime() < itemTime(b).getTime());
 	}
 	return items;
     }

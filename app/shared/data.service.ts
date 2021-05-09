@@ -142,11 +142,25 @@ export class DataService extends Observable {
     }
 
     getItem(deviceTag, seq) {
-	let items = this.protocol[deviceTag];
-	for (let item of items) {
-	    if (item.seq == seq)
-		return Object.assign({device_tag: deviceTag}, item);
+	function binarySearch(array, compare) {
+	    var m = 0, n = array.length - 1;
+	    while (m <= n) {
+		var k = (m + n) >> 1;
+		var cmp = compare(array[k]);
+		if (cmp > 0) {
+		    m = k + 1;
+		} else if (cmp < 0) {
+		    n = k - 1;
+		} else {
+		    return array[k];
+		}
+	    }
 	}
+
+	let items = this.protocol[deviceTag];
+	let item = binarySearch(items, (item) => seq - item.seq);
+	if (item)
+	    return Object.assign({device_tag: deviceTag}, item);
     }
 
     async updateRecord(oldItem, newItem) {
