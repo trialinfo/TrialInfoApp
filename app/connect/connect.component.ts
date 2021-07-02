@@ -3,7 +3,7 @@ import { RouterExtensions } from "@nativescript/angular";
 import * as dialogs from "tns-core-modules/ui/dialogs";
 import { BarcodeScanner } from 'nativescript-barcodescanner';
 
-import { SettingsService, DataService, SyncService, PollService, MySideDrawer } from "../shared";
+import { SettingsService, DataService, EventInfo, SyncService, PollService, MySideDrawer } from "../shared";
 
 const moment = require('moment');
 
@@ -72,26 +72,28 @@ export class ConnectComponent extends MySideDrawer implements OnInit {
     async connect() {
 	try {
 	    this.busy = true;
-	    let connected = () => {
-		this.settingsService.serverUrl = this.serverUrl;
-		this.settingsService.syncServerUrl = this.syncServerUrl;
-		this.settingsService.accessToken = this.accessToken;
-	    };
-	    await this.dataService.connect(this.serverUrl, this.accessToken, connected);
+	    let eventInfo: EventInfo;
+	    try {
+		eventInfo = await this.dataService.getEventInfo(this.serverUrl, this.accessToken);
+	    } catch (error) {
+		console.log(error);
+		await dialogs.alert({
+		    title: this.serverUrl,
+		    message: error.statusText || 'Unknown Error',
+		    okButtonText: 'OK'
+		});
+		return;
+	    }
+	    this.settingsService.serverUrl = this.serverUrl;
+	    this.settingsService.syncServerUrl = this.syncServerUrl;
+	    this.settingsService.accessToken = this.accessToken;
+	    await this.dataService.connect(eventInfo);
 	    this.syncService.startSync();
 	    this.pollService.startPoll(false);
-	} catch (error) {
-	    console.log(error);
-	    await dialogs.alert({
-		title: this.serverUrl,
-		message: error.statusText || 'Unknown Error',
-		okButtonText: 'OK'
-	    });
-	    return;
+	    this.routerExtensions.navigate(['/register'], {clearHistory: true});
 	} finally {
 	    this.busy = false;
 	}
-	this.routerExtensions.navigate(['/register'], {clearHistory: true});
     }
 
     async edit() {

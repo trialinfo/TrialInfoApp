@@ -46,7 +46,9 @@ class PollTarget {
     private async poll() {
 	try {
 	    let accessToken = this.parent.settingsService.accessToken;
-	    await this.parent.dataService.fetchDataFrom(this.serverUrl, accessToken, () => {});
+
+	    let dataService = this.parent.dataService;
+	    let eventInfo = await dataService.pollEventInfo(this.serverUrl, accessToken);
 	    if (!this.pollActive)
 		return;
 	    this.pollDelay =

@@ -10,9 +10,58 @@ const deepEqual = require("deep-equal");
 import { SettingsService } from '.';
 import { merge_sorted } from '../shared/common';
 
+export class EventInfo {
+    private static requests = [];
+    public data;
+    private canceled: boolean = false;
+    private promise: Promise<EventInfo>;
+
+    constructor(
+	public serverUrl: string,
+	public accessToken: string) {
+    }
+
+    static fetch(
+	httpClient: HttpClient,
+	serverUrl: string,
+	accessToken: string): Promise<EventInfo> {
+	let url = serverUrl + '/api/scoring/' + accessToken;
+
+	let request = EventInfo.requests[url];
+	if (request && !request.canceled)
+	    return request.promise;
+
+	request = new EventInfo(serverUrl, accessToken);
+	EventInfo.requests[url] = request;
+
+	request.promise = new Promise<EventInfo>(async (resolve, reject) => {
+	    try {
+		let response = <any> await httpClient.get(url).toPromise();
+		if (request.canceled)
+		  reject(undefined);
+		// FIXME: Check HTTP error code and general validity
+		request.data = response;
+		resolve(request);
+	    } catch (error) {
+		reject(error);
+	    } finally {
+		if (EventInfo.requests[url] == request)
+		  delete EventInfo.requests[url];
+	    }
+	});
+
+	return request.promise;
+    }
+
+    static cancelAll() {
+	for (let request of EventInfo.requests)
+	    request.canceled = true;
+	EventInfo.requests = [];
+    }
+}
+
 @Injectable()
 export class DataService extends Observable {
-    private previousFetch: Promise<any>;
     private data: any = {};
     protocol: any = {};
     maxTime: Date;
@@ -38,32 +87,49 @@ export class DataService extends Observable {
 	return this.data.registered_zones;
     }
 
-    async fetchDataFrom(serverUrl: string, accessToken: string, connected) {
-	if (this.previousFetch) {
-	    await this.previousFetch;
+    getEventInfo(serverUrl: string, accessToken: string): Promise<EventInfo> {
+	return EventInfo.fetch(this.httpClient, serverUrl, accessToken);
+    }
+
+    async processEventInfo(eventInfo: EventInfo) {
+	let data = eventInfo.data;
+
+	if (eventInfo.serverUrl != this.settingsService.serverUrl ||
+	    eventInfo.accessToken != this.settingsService.accessToken)
+	    return;
+	if (!data.ctime || this.data.ctime >= data.ctime)
+	    return;
+
+	function no_ctime(obj) {
+	    obj = Object.assign({}, obj);
+	    delete obj.ctime;
+	    return obj;
+	};
+
+	if (deepEqual(no_ctime(this.data), no_ctime(data))) {
+	    this.data.ctime = data.ctime;
 	    return;
 	}
-	let url = serverUrl + '/api/scoring/' + accessToken;
-	this.previousFetch = this.httpClient.get(url).toPromise();
-	let response;
-	try {
-	    response = <any> await this.previousFetch;
-	} finally {
-	    this.previousFetch = null;
-	}
-	connected();
-	if (!deepEqual(this.data, response)) {
-	    this.data = response;
-	    await this.sqlUpdateEventData();
-	    this.notifyPropertyChange('data', this.data);
-	}
+
+	this.data = data;
+	await this.sqlUpdateEventData();
+	this.notifyPropertyChange('data', this.data);
+    }
+
+    async pollEventInfo(serverUrl?: string, accessToken?: string) {
+	if (serverUrl == null)
+	    serverUrl = this.settingsService.serverUrl;
+	if (accessToken == null)
+	    accessToken = this.settingsService.accessToken;
+	let eventInfo = await this.getEventInfo(serverUrl, accessToken);
+	await this.processEventInfo(eventInfo);
     }
 
     async fetchData() {
-	await this.fetchDataFrom(
-	    this.settingsService.serverUrl,
-	    this.settingsService.accessToken,
-	    () => {});
+	// XXX Only auto-start fetching, polling, and syncing within a
+	// reasonable amount of time of registering (not on the next day!)
+
+	await this.pollEventInfo();
     }
 
     private setConnected(connected: boolean) {
@@ -71,9 +137,9 @@ export class DataService extends Observable {
 	this.notifyPropertyChange('connected', connected);
     }
 
-    async connect(serverUrl: string, accessToken: string, connected) {
-	// FIXME: Cancel this.previousFetch.
-	await this.fetchDataFrom(serverUrl, accessToken, connected);
+    async connect(eventInfo: EventInfo) {
+	// FIXME: Cancel this.previousFetch once we know we have a reasonable response ...
+	this.processEventInfo(eventInfo);
 	this.settingsService.registeredZones = (() => {
 	    let registeredZones = this.data.registered_zones;
 	    let deviceTag = this.settingsService.deviceTag;
