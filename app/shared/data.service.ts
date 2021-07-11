@@ -94,9 +94,9 @@ export class DataService extends Observable {
     async processEventInfo(eventInfo: EventInfo) {
 	let data = eventInfo.data;
 
-	if (eventInfo.serverUrl != this.settingsService.serverUrl ||
-	    eventInfo.accessToken != this.settingsService.accessToken)
+	if (eventInfo.accessToken != this.settingsService.accessToken)
 	    return;
+
 	if (!data.ctime || this.data.ctime >= data.ctime)
 	    return;
 
@@ -139,7 +139,7 @@ export class DataService extends Observable {
 
     async connect(eventInfo: EventInfo) {
 	// FIXME: Cancel this.previousFetch once we know we have a reasonable response ...
-	this.processEventInfo(eventInfo);
+	await this.processEventInfo(eventInfo);
 	this.settingsService.registeredZones = (() => {
 	    let registeredZones = this.data.registered_zones;
 	    let deviceTag = this.settingsService.deviceTag;
