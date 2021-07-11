@@ -104,8 +104,8 @@ export class MarksComponent extends MySideDrawer implements OnDestroy {
 	this.reset();
     }
 
-    reset() {
-	if (!this.showPreviousMarks)
+    reset(force?: boolean) {
+	if (!this.showPreviousMarks || force)
 	    this.number = null;
 	this.numberChanged();
 	/*
@@ -345,6 +345,12 @@ export class MarksComponent extends MySideDrawer implements OnDestroy {
     }
 
     async confirmMarks() {
+	if (!this.rider) {
+	    console.log("Something's wrong");
+	    this.reset(true);
+	    return;
+	}
+
 	await this.dataService.record(this.currentItem());
 	this.showPreviousMarks = true;
 	this.reset();
@@ -359,6 +365,12 @@ export class MarksComponent extends MySideDrawer implements OnDestroy {
 	};
 	let result: boolean = await dialogs.confirm(options);
 	if (result) {
+	    if (!this.rider) {
+		console.log("Something's wrong");
+		this.reset(true);
+		return;
+	    }
+
 	    await this.dataService.updateRecord(this.previousItem, this.currentItem());
 	    this.showPreviousMarks = true;
 	    this.reset();
