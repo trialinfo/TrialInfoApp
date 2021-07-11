@@ -76,7 +76,12 @@ export class TableComponent extends MySideDrawer implements OnInit, OnDestroy {
 		!item.canceled && item.zone in zones);
 
 	for (let item of protocol) {
-	    let rider = zones[item.zone][item.number];
+	    let zone = zones[item.zone];
+	    if (!zone)
+		continue;
+	    let rider = zone[item.number];
+	    if (!rider)
+		continue;
 	    let round = rider.computeRound(item.zone);
 	    rider.items[round - 1] = item;
 	}
