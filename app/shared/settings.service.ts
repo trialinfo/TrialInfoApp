@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { Observable } from "tns-core-modules/data/observable";
-import * as settings from "tns-core-modules/application-settings";
+import { Observable } from '@nativescript/core';
+import * as settings from '@nativescript/core/application-settings';
 import { random_tag } from "./common";
 
 @Injectable()

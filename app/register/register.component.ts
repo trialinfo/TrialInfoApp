@@ -1,8 +1,7 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { RouterExtensions } from "@nativescript/angular";
-import { Observable, PropertyChangeData } from "tns-core-modules/data/observable";
-import * as dialogs from "tns-core-modules/ui/dialogs";
-import * as timer from "tns-core-modules/timer";
+import { PropertyChangeData, Observable } from '@nativescript/core';
+import * as dialogs from '@nativescript/core/ui/dialogs';
 
 import { SettingsService, DataService, MySideDrawer } from "../shared";
 

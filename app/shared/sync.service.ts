@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { Observable, PropertyChangeData } from "tns-core-modules/data/observable";
-import * as timer from "tns-core-modules/timer";
+import { Observable, PropertyChangeData } from '@nativescript/core';
+import * as timer from '@nativescript/core/timer';
 
 import { SettingsService, DataService } from '.';
 

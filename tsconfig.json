@@ -1,8 +1,8 @@
 {
     "compilerOptions": {
         "module": "esnext",
-        "target": "es2015",
-	"moduleResolution": "node",
+        "target": "es2017",
+        "moduleResolution": "node",
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "noEmitHelpers": true,
@@ -10,22 +10,25 @@
         "skipLibCheck": true,
         "lib": [
             "es2015",
-            "dom"
+            "dom",
+            "es2017"
         ],
         "baseUrl": ".",
         "paths": {
             "~/*": [
                 "app/*"
             ]
-        }
+        },
+        "removeComments": false
     },
     "include": [
-      "app/tests/**/*.ts",
-      "app/**/*.ios.ts",
-      "app/**/*.android.ts"
+        "app/tests/**/*.ts",
+        "app/**/*.ios.ts",
+        "app/**/*.android.ts"
     ],
     "files": [
-      "./app/main.ts"
+        "./app/main.ts",
+        "./app/polyfills.ts"
     ],
     "exclude": [
         "node_modules",

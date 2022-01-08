@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { Observable } from "tns-core-modules/data/observable";
+import { Observable } from '@nativescript/core';
 
 const sqlite = require('nativescript-sqlite');
 

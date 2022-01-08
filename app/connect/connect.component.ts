@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { RouterExtensions } from "@nativescript/angular";
-import * as dialogs from "tns-core-modules/ui/dialogs";
+import * as dialogs from '@nativescript/core/ui/dialogs';
 import { BarcodeScanner } from 'nativescript-barcodescanner';
 
 import { SettingsService, DataService, EventInfo, SyncService, PollService, MySideDrawer } from "../shared";

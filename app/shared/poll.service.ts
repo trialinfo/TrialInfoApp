@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import * as timer from "tns-core-modules/timer";
+import * as timer from '@nativescript/core/timer';
 
 import { SettingsService, DataService } from '.';
 

@@ -1,9 +1,6 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
-import { Page } from "tns-core-modules/ui/page";
-import { ScrollView } from "tns-core-modules/ui/scroll-view";
+import { Page, ScrollView, PropertyChangeData, Observable } from '@nativescript/core';
 import { RouterExtensions } from "@nativescript/angular";
-import { Observable, PropertyChangeData } from "tns-core-modules/data/observable";
-import * as dialogs from "tns-core-modules/ui/dialogs";
 
 import { SettingsService, DataService, ComputeService, MySideDrawer } from "../shared";
 import { rider_name } from '../shared/common';

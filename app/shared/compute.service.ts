@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Observable, PropertyChangeData } from "tns-core-modules/data/observable";
+import { Observable, PropertyChangeData } from '@nativescript/core';
 
 import { SettingsService, DataService } from '.';
 import { merge_sorted } from '../shared/common';

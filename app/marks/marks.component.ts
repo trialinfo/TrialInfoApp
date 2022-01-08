@@ -1,9 +1,9 @@
-import { Observable, PropertyChangeData } from "tns-core-modules/data/observable";
+import { Observable, PropertyChangeData } from '@nativescript/core';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { RouterExtensions } from "@nativescript/angular";
-import * as timer from "tns-core-modules/timer";
-import * as dialogs from "tns-core-modules/ui/dialogs";
+import * as timer from '@nativescript/core/timer';
+import * as dialogs from '@nativescript/core/ui/dialogs';
 
 import { SettingsService, DataService, ComputeService, MySideDrawer } from '../shared';
 import { rider_name } from '../shared/common';

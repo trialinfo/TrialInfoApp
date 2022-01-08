@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { RouterExtensions } from "@nativescript/angular";
-import { Observable, PropertyChangeData } from "tns-core-modules/data/observable";
-import * as dialogs from "tns-core-modules/ui/dialogs";
+import { PropertyChangeData, Observable } from '@nativescript/core';
 
 import { SettingsService, DataService, ComputeService, MySideDrawer } from "../shared";
 import { rider_name, merge_sorted, range } from '../shared/common';

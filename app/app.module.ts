@@ -1,7 +1,5 @@
 import { NgModule, NO_ERRORS_SCHEMA } from "@angular/core";
-import { NativeScriptFormsModule } from "@nativescript/angular";
-import { NativeScriptModule } from "@nativescript/angular";
-import { NativeScriptHttpClientModule } from "@nativescript/angular";
+import { NativeScriptFormsModule, NativeScriptModule, NativeScriptHttpClientModule } from "@nativescript/angular";
 import { NativeScriptUISideDrawerModule } from "nativescript-ui-sidedrawer/angular";
 
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
