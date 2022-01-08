@@ -22,7 +22,6 @@
     "nativescript-randombytes": "^1.0.0",
     "nativescript-sqlite": "^2.8.4",
     "nativescript-ui-sidedrawer": "^9.0.3",
-    "reflect-metadata": "~0.1.12",
     "rxjs": "^6.6.0",
     "zone.js": "~0.11.1"
   },
