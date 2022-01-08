@@ -1,11 +1,52 @@
+ANDROID SDK
+===========
+
+Install Android Studio to get the Android SDK.
+
+As of January 2022, Nativescript doesn't seem to be compatible with Android API
+Level 32.  Go back to API Level 30 in Android Studio as follows:
+
+⋮ > Android SDK > SDK Platforms
+Check "Android 11.0 (R)" / "API Level 30"
+Uncheck the latest API
+
+⋮ > Android SDK > SDK Tools
+Check "Show Package Details"
+Under "Android SDK Build Tools 32", uncheck version 32.0.0 and check version 30.0.3.
+
+The SDK Command-line Tools DO NOT seem to be needed, so no need to install them:
+⋮ > Android SDK > SDK Tools
+Check "Android SDK Command-line Tools (latest)"
+
+
+ANDROID VIRTUAL DEVICE (FOR TESTING)
+====================================
+
+In Android Studio, create a virtual device:
+ ⋮ > AVD Manager
+
+
+NATIVESCRIPT
+============
+
 Install NativeScript into $HOME with:
+ $ mkdir ~/nativescript
+ $ cd ~/nativescript
+ $ npm install nativescript
 
-$ mkdir ~/nativescript
-$ cd ~/nativescript
-$ npm install nativescript
+Make sure ~/nativescript/node_modules/.bin is in the PATH.
 
-Then, change here and start this app in preview mode with the tns utility you
-have installed into $HOME/nativescript/node_modules/.bin/ above:
+Verify the installation with:
+ $ ns doctor android
+
+
+VIRTUAL TESTING
+===============
+
+Start the app in preview mode with:
+
+$ ns device android --available-devices
+$ ns debug android --device Pixel_4_API_30
 
 $ ns run android --emulator
 $ ns run android
@@ -16,16 +57,17 @@ you can also do that manually with:
 
 $ npm install
 
+When building the app results in errors like the following:
 
-The app contains a sqlite database.  The contents of the database can be dumped with:
+  Warning: Unable to fully load .../nativescript-ui-sidedrawer-angular.js for source-map flattening: ENOENT: no such file or directory, open '.../nativescript-ui-sidedrawer-angular.js.map'
 
-$ sqlite3 app/scoring.sqlite ".schema" > scoring.sql
+The following command may help:
 
-The database structure can be recreated from the dump as follows:
+  $ npm dedupe
 
-$ rm -f app/scoring.sqlite
-$ sqlite3 app/scoring.sqlite -init scoring.sql
 
+TESTING ON ANDROID DEVICES
+==========================
 
 For testing on Android devices, Developer Options and USB Debugging needs to be
 enabled:
@@ -39,3 +81,15 @@ In German, that is:
 * Einstellungen > Übder das Telefon, Build-Nummer
 * Einstellungen > System > Erweitert > Entwickleroptionen, USB-Debugging
 * Standard-USB-Konfiguration: Dateiübertragung/Android Auto
+
+
+SQLITE
+======
+The app contains a sqlite database.  The contents of the database can be dumped with:
+
+$ sqlite3 app/scoring.sqlite ".schema" > scoring.sql
+
+The database structure can be recreated from the dump as follows:
+
+$ rm -f app/scoring.sqlite
+$ sqlite3 app/scoring.sqlite -init scoring.sql
