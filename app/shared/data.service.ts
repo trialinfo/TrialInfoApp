@@ -5,7 +5,7 @@ import { Observable } from "tns-core-modules/data/observable";
 const sqlite = require('nativescript-sqlite');
 
 const moment = require('moment');
-const deepEqual = require("deep-equal");
+const equal = require("fast-deep-equal");
 
 import { SettingsService } from '.';
 import { merge_sorted } from '../shared/common';
@@ -106,7 +106,7 @@ export class DataService extends Observable {
 	    return obj;
 	};
 
-	if (deepEqual(no_ctime(this.data), no_ctime(data))) {
+	if (equal(no_ctime(this.data), no_ctime(data))) {
 	    this.data.ctime = data.ctime;
 	    return;
 	}
@@ -167,7 +167,7 @@ export class DataService extends Observable {
 	}).toPromise();
 
 	this.settingsService.registeredZones = zones;
-	if (!deepEqual(this.data.registered_zones, response.registered_zones)) {
+	if (!equal(this.data.registered_zones, response.registered_zones)) {
 	    this.data.registered_zones = response.registered_zones;
 	    this.notifyPropertyChange('data', this.data);
 	}

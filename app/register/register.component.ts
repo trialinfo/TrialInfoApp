@@ -6,7 +6,7 @@ import * as timer from "tns-core-modules/timer";
 
 import { SettingsService, DataService, MySideDrawer } from "../shared";
 
-const deepEqual = require("deep-equal");
+const equal = require("fast-deep-equal");
 
 @Component({
     moduleId: module.id,
@@ -94,7 +94,7 @@ export class RegisterComponent extends MySideDrawer implements OnInit, OnDestroy
     }
 
     modified(): boolean {
-	return !deepEqual(this.zonesToRegister(), this.oldZones);
+	return !equal(this.zonesToRegister(), this.oldZones);
     }
 
     canRegister(): boolean {
