@@ -356,7 +356,7 @@ export class DataService extends Observable {
 	if (!db)
 		return;
 
-	if (deepEqual(this.data, {})) {
+	if (Object.keys(this.data).length == 0) {
 	    let rows = await db.all(`
 		SELECT data
 		FROM events
@@ -392,7 +392,7 @@ export class DataService extends Observable {
 	}
 
 	this.protocol = {};
-	if (!deepEqual(update, {})) {
+	if (Object.keys(update).length != 0) {
 	    let chronological = this.updateProtocol(update);
 	    this.notifyPropertyChange('protocol', chronological ? update : null);
 	}
